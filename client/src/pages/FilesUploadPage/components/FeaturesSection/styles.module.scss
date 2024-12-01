@@ -1,0 +1,28 @@
+@import "@/App.scss";
+
+.features {
+  margin: $page-margin;
+}
+
+.card {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.image {
+  width: 450px;
+  height: 120px;
+}
+
+.card-title {
+  color: white;
+  text-align: left;
+  padding: 20px;
+  padding-left: 0px;
+  font-size: 20px;
+}
+
+.card-description {
+  color: white;
+  text-align: left;
+}

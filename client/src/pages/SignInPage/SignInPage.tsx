@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -19,16 +19,24 @@ const SignInPage = () => {
   const navigate = useNavigate();
   const { setUser } = useContext(AuthContext);
 
+  useEffect(() => {
+    let isAuth = localStorage.getItem("userToken");
+    if (isAuth && isAuth !== null) {
+      navigate("/files-upload");
+    }
+  }, []);
+
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
     const email = (document.getElementById("email") as HTMLInputElement).value;
-    const password = (document.getElementById("password") as HTMLInputElement).value;
+    const password = (document.getElementById("password") as HTMLInputElement)
+      .value;
 
     try {
       const response = await login(email, password);
-      localStorage.setItem("userToken", response.data.token);
-      localStorage.setItem("userProfile", JSON.stringify(response.data.user));
-      setUser(response.data.user);
+      localStorage.setItem("userToken", response.access_token);
+      localStorage.setItem("userProfile", JSON.stringify(response.user));
+      setUser(response.user);
       navigate("/files-upload");
     } catch (error) {
       console.error("Login failed:", error);
@@ -67,7 +75,7 @@ const SignInPage = () => {
               </div>
               <Input id="password" type="password" required />
             </div>
-            <Button type="submit" className="w-full bg-orange-600 text-white">
+            <Button type="submit" className="w-full bg-[#426592] text-white">
               Login
             </Button>
           </form>

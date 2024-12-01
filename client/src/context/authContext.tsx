@@ -1,4 +1,4 @@
-import { createContext, useState, ReactNode } from "react";
+import { createContext, useState, ReactNode, useEffect } from "react";
 
 interface AuthContextType {
   user: any;
@@ -23,6 +23,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem("userProfile");
     setUser(null);
   };
+
 
   return (
     <AuthContext.Provider value={{ user, setUser, logout }}>

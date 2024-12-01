@@ -1,0 +1,153 @@
+/* Montserrat Font */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Overpass:ital,wght@0,100..900;1,100..900&display=swap");
+
+/* Poppins Font */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Overpass:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+/* SifonnBasic Font */
+@font-face {
+  font-family: "SifonnBasic";
+  src: url("https://res.cloudinary.com/deere9bam/raw/upload/v1721294015/SIFONN_BASIC_zfelce.otf")
+    format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Overpass Font */
+@font-face {
+  font-family: "Overpass";
+  src: url("https://res.cloudinary.com/deere9bam/raw/upload/v1721300170/Overpass-VariableFont_wght_yqzeco.ttf")
+    format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+$primary-color: #426592;
+$page-margin: 1rem 5rem;
+
+@mixin buttons {
+  background-color: $primary-color;
+  border-radius: 30px;
+  border: 1px solid $primary-color;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  color: white;
+  font-family: "Montserrat" !important;
+  width: 192px;
+  cursor: pointer;
+  height: 40px;
+}
+
+* {
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Montserrat";
+  padding: 0;
+  box-sizing: border-box;
+  color: black;
+}
+
+/*---------------------------------------- Styling of Header Section ---------------------------------*/
+header {
+  margin: $page-margin;
+
+  nav {
+    .flex-class {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+
+      img {
+        margin-top: 10px;
+        width: 165px;
+        height: 40px;
+      }
+
+      .navbar-nav {
+        display: flex;
+
+        .nav-list {
+          display: flex;
+          flex-direction: row;
+
+          .nav-list-items {
+            padding: 1rem;
+            text-decoration: none;
+            font-size: 16px;
+            color: black;
+          }
+
+          button {
+            padding-left: 10px;
+            padding: 1rem;
+            text-decoration: none;
+            font-size: 16px;
+
+            .write-icon {
+              font-weight: 100;
+              opacity: 0.7;
+            }
+          }
+        }
+
+        .button {
+          .user-menu {
+            margin-left: 50px;
+            margin-top: 5px;
+
+            .user-avatar {
+              width: 47px;
+              height: 40px;
+              border-radius: 48%;
+              border: 0.1px solid lightgray;
+              cursor: pointer;
+            }
+
+            .dropdown-menu {
+              display: flex;
+              flex-direction: column;
+            }
+          }
+
+          .sign-in-button {
+            @include buttons;
+            width: 150px;
+            margin-left: 50px;
+            margin-top: 10px;
+          }
+
+          .sign-in-button:hover {
+            background-color: white;
+            color: $primary-color;
+          }
+        }
+      }
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: space-around;
+      height: 20px;
+      cursor: pointer;
+
+      .bar {
+        width: 25px;
+        height: 3px;
+        margin: 2px 0;
+        background: #424242;
+        width: 18px;
+        border-radius: 6px;
+        opacity: 0.68px;
+      }
+    }
+  }
+}

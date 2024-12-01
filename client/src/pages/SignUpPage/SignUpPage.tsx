@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -10,7 +10,8 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import axios from "axios";
+import { signup } from "@/services/authServices";
+import { AuthContext } from "@/context/authContext";
 
 export const description =
   "A sign up form with first name, last name, email, and password inside a card. There's an option to sign up with GitHub and a link to login if you already have an account.";
@@ -22,21 +23,23 @@ const SignUpPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
 
+  useEffect(() => {
+    if (user) {
+      navigate("/files-upload");
+    }
+  }, []);
+  
   const handleSignUp = async (event: React.FormEvent) => {
     event.preventDefault();
 
     try {
-      await axios.post("http://localhost:4000/api/users", {
-        name,
-        email,
-        password,
-      });
-
+      await signup(name, email, password);
       setSuccess("Account created successfully! Redirecting to sign in...");
       setError(null);
       setTimeout(() => {
-        navigate("/"); // Redirect to sign-in page after a delay
+        navigate("/");
       }, 2000);
     } catch (error: any) {
       console.error(
@@ -46,7 +49,7 @@ const SignUpPage = () => {
       setError(
         error.response?.data?.errors[0]?.message ||
           "Failed to create an account"
-      ); // Update error state with the message
+      );
     }
   };
 
@@ -101,14 +104,14 @@ const SignUpPage = () => {
               {error && (
                 <p className="text-red-500 text-sm text-center">{error}</p>
               )}
-              <Button type="submit" className="w-full bg-orange-600 text-white">
+              <Button type="submit" className="w-full bg-[#426592] text-white">
                 Create an account
               </Button>
             </form>
           )}
           <div className="mt-4 text-center text-sm">
             Already have an account?{" "}
-            <Link to="/signin" className="underline">
+            <Link to="/" className="underline">
               Sign in
             </Link>
           </div>

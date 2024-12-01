@@ -1,0 +1,6 @@
+pip install fastapi uvicorn pymongo python-jose passlib email-validator python-dotenv
+pip install bcrypt
+pip install fastapi-mail
+pip install requests
+
+python -m uvicorn main:app --reload
