@@ -29,7 +29,7 @@ async def update_user_profile(
     if email:
         update_data["email"] = email
     if password:
-        update_data["password"] = password  # Hash this in production
+        update_data["password"] = password  # Hash in production
     if profile_picture:
         update_data["profile_picture"] = profile_picture
 
@@ -38,7 +38,13 @@ async def update_user_profile(
     )
     if result.matched_count == 0:
         raise HTTPException(status_code=404, detail="User not found")
-    return {"message": "Profile updated successfully"}
+
+    # Return the updated user data
+    updated_user = users_collection.find_one({"email": token["email"]})
+    updated_user["_id"] = str(updated_user["_id"])  # Convert ObjectId to string
+
+    return {"message": "Profile updated successfully", "user": updated_user}
+
 
 @profile_router.post("/upload-profile-picture")
 async def upload_profile_picture(
@@ -47,13 +53,12 @@ async def upload_profile_picture(
     if file.content_type not in ["image/png", "image/jpeg"]:
         raise HTTPException(status_code=400, detail="Only PNG and JPEG files are allowed")
 
-    # Save the file locally (adjust for S3 or other storage services in production)
     file_location = f"./uploads/{file.filename}"
     with open(file_location, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    # Update user's profile picture in the database
     users_collection.update_one(
         {"email": token["email"]}, {"$set": {"profile_picture": file_location}}
     )
     return {"message": "Profile picture uploaded successfully", "url": file_location}
+

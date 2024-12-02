@@ -17,6 +17,7 @@ const UserProfilePage: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
+  const [profilePictureUrl, setProfilePictureUrl] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
@@ -36,6 +37,7 @@ const UserProfilePage: React.FC = () => {
       setUser(data.user);
       setName(data.user.name);
       setEmail(data.user.email);
+      setProfilePictureUrl(data.user.profile_picture || "");
     } catch (error) {
       console.error("Error fetching user profile:", error);
       toast.error("Failed to fetch profile.");
@@ -45,6 +47,7 @@ const UserProfilePage: React.FC = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setProfilePicture(e.target.files[0]);
+      setProfilePictureUrl(URL.createObjectURL(e.target.files[0]));
     }
   };
 
@@ -54,34 +57,38 @@ const UserProfilePage: React.FC = () => {
     const token = localStorage.getItem("userToken");
 
     try {
-      let profilePictureUrl = user?.profile_picture;
+      let updatedProfilePictureUrl = user?.profile_picture;
 
+      // Upload the profile picture if a new one is selected
       if (profilePicture) {
-        const uploadResponse = await uploadProfilePicture(
-          token,
-          profilePicture
-        );
-        profilePictureUrl = uploadResponse.url;
+        const uploadResponse = await uploadProfilePicture(token, profilePicture);
+        updatedProfilePictureUrl = uploadResponse.url;
       }
 
       const updateData = {
         name,
         email,
         ...(password && { password }),
-        ...(profilePictureUrl && { profile_picture: profilePictureUrl }),
+        profile_picture: updatedProfilePictureUrl,
       };
 
-      await updateUserProfile(token, updateData);
+      // Update the user profile
+      const updatedUser = await updateUserProfile(token, updateData);
+
+      // Update the local state to reflect changes
+      setUser(updatedUser.user);
+      setName(updatedUser.user.name);
+      setEmail(updatedUser.user.email);
+      setProfilePictureUrl(updatedUser.user.profile_picture || "");
 
       toast.success("Profile updated successfully!");
-      fetchUserProfile();
     } catch (error) {
       console.error("Error updating profile:", error);
       toast.error("Failed to update profile.");
     } finally {
       setLoading(false);
     }
-  };
+};
 
   return (
     <div>
@@ -92,12 +99,8 @@ const UserProfilePage: React.FC = () => {
           <div className="flex items-center space-x-4">
             <Avatar>
               <AvatarImage
-                src={
-                  profilePicture
-                    ? URL.createObjectURL(profilePicture)
-                    : user?.profile_picture
-                }
-                alt={name}
+                src={profilePictureUrl}
+                alt={name || "Profile Picture"}
               />
               <AvatarFallback>{name.charAt(0)}</AvatarFallback>
             </Avatar>
